@@ -18,9 +18,9 @@ class CarreraRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        carreraRepository.save(DatosDummy.carrera01());
-        carreraRepository.save(DatosDummy.carrera02());
-        carreraRepository.save(DatosDummy.carrera03());
+        carreraRepository.save(DatosDummy.carrera01(false));
+        carreraRepository.save(DatosDummy.carrera02(false));
+        carreraRepository.save(DatosDummy.carrera03(false));
     }
 
     @AfterEach

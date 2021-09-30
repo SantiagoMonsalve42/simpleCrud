@@ -8,14 +8,20 @@ import java.math.BigDecimal;
 import static com.springsimplespasos.universidad.universidadbackend.modelo.entidades.enumeradores.TipoEmpleado.*;
 
 public class DatosDummy {
-    public static Carrera carrera01(){
-        return new Carrera(null,"Ingenieria ambiental",50,5);
+    public static Carrera carrera01(boolean conId){
+        Carrera carrera = (conId) ?  new Carrera(1,"Ingenieria ambiental",50,5):
+        new Carrera(null,"Ingenieria ambiental",50,5);
+        return carrera;
     }
-    public static Carrera carrera02(){
-        return new Carrera(null,"Licenciatura ambiental",45,5);
+    public static Carrera carrera02(boolean conId){
+        Carrera carrera = (conId) ? new Carrera(2,"Licenciatura ambiental",45,5):
+         new Carrera(null,"Licenciatura ambiental",45,5);
+        return carrera;
     }
-    public static Carrera carrera03(){
-        return new Carrera(null,"Ingenieria en Sistemas",70,5);
+    public static Carrera carrera03(boolean conId){
+        Carrera carrera = (conId) ? new Carrera(3,"Ingenieria en Sistemas",70,5):
+        new Carrera(null,"Ingenieria en Sistemas",70,5);
+        return carrera;
     }
     public static Persona empleado01(){
         return new Empleado(null,"ANDRES","SANTIAGO","20201010",new Direccion(),new BigDecimal("452415"), ADMINISTRATIVO);
