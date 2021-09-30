@@ -16,8 +16,8 @@ public class PabellonController implements CommandLineRunner {
     public void run(String... args) throws Exception {
         /*Direccion d1 = new Direccion("calle","numerp","5050","dpt","101","lo");
         Pabellon p = new Pabellon(8,2.6,"la 40",d1);
-        service.save(p);*/
+        service.save(p);
         Iterable<Pabellon> p=service.buscarPorNombre("la 40");
-        p.forEach(System.out::println);
+        p.forEach(System.out::println);*/
     }
 }
