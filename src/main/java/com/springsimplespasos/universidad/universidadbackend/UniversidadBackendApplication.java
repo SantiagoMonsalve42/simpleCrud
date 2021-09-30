@@ -16,7 +16,6 @@ import java.util.List;
 public class UniversidadBackendApplication {
 
 
-
 	public static void main(String[] args) {
 		String[] b=SpringApplication.run(UniversidadBackendApplication.class, args).getBeanDefinitionNames();
 
