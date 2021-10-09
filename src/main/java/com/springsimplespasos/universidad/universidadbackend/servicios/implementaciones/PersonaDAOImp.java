@@ -30,4 +30,9 @@ public class PersonaDAOImp extends GenericDAOImp<Persona, PersonaRepository> imp
         return repository.buscarPersonaPorApellido(apellido);
     }
 
+    @Override
+    public Iterable<Persona> readAllAlumnos() {
+        return repository.readAllAlumnos();
+    }
+
 }

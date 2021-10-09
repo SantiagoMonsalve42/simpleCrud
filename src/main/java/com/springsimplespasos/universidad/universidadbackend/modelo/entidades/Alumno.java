@@ -1,5 +1,7 @@
 package com.springsimplespasos.universidad.universidadbackend.modelo.entidades;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 
 @Entity
@@ -16,6 +18,7 @@ public class Alumno extends Persona {
             }
     )
     @JoinColumn(name = "carrera_id")
+    @JsonIgnoreProperties({"alumnos","hibernateLazyInitializer"})
     private Carrera carrera;
 
     public Alumno() {

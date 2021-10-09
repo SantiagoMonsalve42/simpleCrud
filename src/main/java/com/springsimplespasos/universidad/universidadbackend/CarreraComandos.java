@@ -1,28 +1,23 @@
 package com.springsimplespasos.universidad.universidadbackend;
 
-import com.springsimplespasos.universidad.universidadbackend.modelo.entidades.Aula;
-import com.springsimplespasos.universidad.universidadbackend.modelo.entidades.Carrera;
-import com.springsimplespasos.universidad.universidadbackend.modelo.entidades.Direccion;
-import com.springsimplespasos.universidad.universidadbackend.modelo.entidades.Pabellon;
-import com.springsimplespasos.universidad.universidadbackend.modelo.entidades.enumeradores.Pizarron;
-import com.springsimplespasos.universidad.universidadbackend.servicios.contratos.AulaDAO;
-import com.springsimplespasos.universidad.universidadbackend.servicios.contratos.CarreraDAO;
+import com.springsimplespasos.universidad.universidadbackend.modelo.entidades.*;
+import com.springsimplespasos.universidad.universidadbackend.servicios.contratos.AlumnoDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
-
-import java.util.Optional;
-import java.util.Set;
 
 @Component
 public class CarreraComandos implements CommandLineRunner {
 
     @Autowired
-    private AulaDAO servicio;
+    private AlumnoDAO servicio;
 
     @Override
     public void run(String... args) throws Exception {
-    /*
+      /*   Iterable<Persona> all = servicio.findAll();
+        all.forEach(System.out::println);
+
+
         Pizarron p1 = Pizarron.PIZARRA_BLANCA;
         Pizarron p2 = Pizarron.PIZARRA_TIZA;
         Aula a1 = new Aula(1,10,"medidas",30,p1);

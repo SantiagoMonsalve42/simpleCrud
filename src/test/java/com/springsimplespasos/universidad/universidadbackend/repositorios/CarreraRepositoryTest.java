@@ -20,7 +20,7 @@ class CarreraRepositoryTest {
     void setUp() {
         carreraRepository.save(DatosDummy.carrera01(false));
         carreraRepository.save(DatosDummy.carrera02(false));
-        carreraRepository.save(DatosDummy.carrera03(false));
+        carreraRepository.save(DatosDummy.carrera03(false ));
     }
 
     @AfterEach

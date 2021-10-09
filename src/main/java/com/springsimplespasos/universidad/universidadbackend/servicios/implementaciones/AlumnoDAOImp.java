@@ -20,4 +20,5 @@ public class AlumnoDAOImp extends PersonaDAOImp implements AlumnoDAO {
     public Iterable<Persona> buscarPorNombreCarrera(String name) {
         return ((AlumnoRepository)repository).buscarPorNombreCarrera(name);
     }
+
 }

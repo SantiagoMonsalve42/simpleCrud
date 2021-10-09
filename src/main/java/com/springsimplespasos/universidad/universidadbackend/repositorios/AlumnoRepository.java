@@ -8,4 +8,5 @@ import org.springframework.stereotype.Repository;
 public interface AlumnoRepository extends PersonaRepository{
     @Query("select a from Alumno a where a.carrera.nombre = ?1")
     Iterable<Persona> buscarPorNombreCarrera(String name);
+
 }
