@@ -1,5 +1,7 @@
 package com.springsimplespasos.universidad.universidadbackend.modelo.entidades;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -22,6 +24,7 @@ public class Pabellon implements Serializable {
             @AttributeOverride(name = "codigoPostal", column = @Column(name = "codigo_postal")),
             @AttributeOverride(name = "dpto", column = @Column(name = "departamento"))
     })
+    @JsonIgnoreProperties({"direccion"})
     private Direccion direccion;
     @Column(name = "fecha_alta")
     private LocalDateTime fechaAlta;
@@ -31,6 +34,7 @@ public class Pabellon implements Serializable {
             mappedBy = "pabellon",
             fetch = FetchType.LAZY
     )
+    @JsonIgnoreProperties("pabellon")
     private Set<Aula> aulas;
 
     public Pabellon() {

@@ -19,6 +19,6 @@ public interface PersonaRepository extends CrudRepository<Persona,Integer> {
     Iterable<Persona> readAllAlumnos();
     @Query("select p from Profesor p")
     Iterable<Persona> readAllProfesores();
-    /*@Query("select e from Empleados e")
-    Iterable<Persona> readAllEmpleados();*/
+    @Query("select e from Empleado e")
+    Iterable<Persona> readAllEmpleados();
 }

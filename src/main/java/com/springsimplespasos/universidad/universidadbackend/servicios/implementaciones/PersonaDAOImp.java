@@ -45,7 +45,7 @@ public class PersonaDAOImp extends GenericDAOImp<Persona, PersonaRepository> imp
     @Override
     @Transactional(readOnly = true)
     public Iterable<Persona> readAllEmpleados() {
-        return null;
+        return repository.readAllEmpleados();
     }
 
 }

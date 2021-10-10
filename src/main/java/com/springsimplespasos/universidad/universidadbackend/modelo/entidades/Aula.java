@@ -1,5 +1,6 @@
 package com.springsimplespasos.universidad.universidadbackend.modelo.entidades;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.springsimplespasos.universidad.universidadbackend.modelo.entidades.enumeradores.Pizarron;
 
 import javax.persistence.*;
@@ -38,6 +39,7 @@ public class Aula implements Serializable {
             name = "pabellon_id",
             foreignKey = @ForeignKey(name = "FK_PABELLON_ID")
     )
+    @JsonIgnoreProperties("aula")
     private Pabellon pabellon;
 
     public Aula() {
