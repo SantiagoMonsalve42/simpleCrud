@@ -9,15 +9,18 @@ import com.springsimplespasos.universidad.universidadbackend.servicios.contratos
 import com.springsimplespasos.universidad.universidadbackend.servicios.contratos.PersonaDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
 @RequestMapping("/alumnos")
 public class AlumnoController extends PersonaController {
-
+    private Map<String,Object> mensaje;
     private final CarreraDAO carreraDAO;
 
     @Autowired
@@ -28,40 +31,57 @@ public class AlumnoController extends PersonaController {
     }
     //sobrecarga de metodo para obtener solo los alumnos
     @Override
-    public List<Persona> obtenerTodos(){
+    public ResponseEntity<?> obtenerTodos(){
+        mensaje = new HashMap<>();
         List<Persona> personas = (List<Persona>) service.readAllAlumnos();
         if(personas.isEmpty()){
-            throw new BadRequestException("No hay alumnos");
+            mensaje.put("success",Boolean.FALSE);
+            mensaje.put("mensaje","No hay alumnos");
+            return ResponseEntity.badRequest().body(mensaje);
         }
-        return personas;
+        mensaje.put("success",Boolean.TRUE);
+        mensaje.put("mensaje",personas);
+        return ResponseEntity.ok(mensaje);
     }
     @PutMapping("/{id}")
-    public Persona update(@PathVariable Integer id,@RequestBody Persona alumno){
+    public ResponseEntity<?> update(@PathVariable Integer id,@RequestBody Persona alumno){
+        mensaje = new HashMap<>();
         Persona alumnoUpdate = null;
         Optional<Persona> byId = service.findById(id);
         if(! byId.isPresent()){
-            throw new BadRequestException("No se encontro alumno con id "+id);
+            mensaje.put("success",Boolean.FALSE);
+            mensaje.put("mensaje","No se encontro alumno con id "+id);
+            return ResponseEntity.badRequest().body(mensaje);
         }
         alumnoUpdate = byId.get();
         alumnoUpdate.setNombre(alumno.getNombre());
         alumnoUpdate.setApellido(alumno.getApellido());
         alumnoUpdate.setDireccion(alumno.getDireccion());
-        return service.save(alumnoUpdate);
+        mensaje.put("success",Boolean.TRUE);
+        mensaje.put("mensaje",service.save(alumnoUpdate));
+        return ResponseEntity.ok(mensaje);
     }
 
     @PutMapping("/{idAlumno}/carrera/{idCarrera}")
-    public Persona asignarCarreraAlumno(@PathVariable Integer idAlumno,@PathVariable Integer idCarrera){
+    public ResponseEntity<?> asignarCarreraAlumno(@PathVariable Integer idAlumno,@PathVariable Integer idCarrera){
+        mensaje = new HashMap<>();
         Optional<Persona> byId = service.findById(idAlumno);
         Optional<Carrera> byIdCarrera = carreraDAO.findById(idCarrera);
         if(! byId.isPresent()){
-            throw new BadRequestException("No se encontro alumno con id "+idAlumno);
+            mensaje.put("success",Boolean.FALSE);
+            mensaje.put("mensaje","No se encontro alumno con id "+idAlumno);
+            return ResponseEntity.badRequest().body(mensaje);
         }
         if(! byIdCarrera.isPresent()){
-            throw new BadRequestException("No se encontro carrera con id "+idCarrera);
+            mensaje.put("success",Boolean.FALSE);
+            mensaje.put("mensaje","No se encontro carrera con id "+idCarrera);
+            return ResponseEntity.badRequest().body(mensaje);
         }
         Persona alumno = byId.get();
         Carrera carrera = byIdCarrera.get();
         ((Alumno)alumno).setCarrera(carrera);
-        return service.save(alumno);
+        mensaje.put("success",Boolean.TRUE);
+        mensaje.put("mensaje",service.save(alumno));
+        return ResponseEntity.ok(mensaje);
     }
 }

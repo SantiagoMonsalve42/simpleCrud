@@ -8,15 +8,15 @@ import com.springsimplespasos.universidad.universidadbackend.servicios.contratos
 import com.springsimplespasos.universidad.universidadbackend.servicios.contratos.PersonaDAO;
 import com.springsimplespasos.universidad.universidadbackend.servicios.contratos.ProfesorDAO;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @RestController()
 @RequestMapping("/profesor")
 public class ProfesorController extends PersonaController{
+    private Map<String,Object> mensaje;
     private CarreraDAO carreraDAO;
 
     public ProfesorController(@Qualifier("profesorDAOImp") PersonaDAO service, CarreraDAO carreraDAO) {
@@ -24,53 +24,76 @@ public class ProfesorController extends PersonaController{
         this.carreraDAO = carreraDAO;
         nombreEntidad= "Profesor";
     }
+    //SOBRE CARGA DE FUNCIONES USANDO HERENCIA
     @Override
-    public List<Persona> obtenerTodos(){
+    public ResponseEntity<?> obtenerTodos(){
+        mensaje = new HashMap<>();
         List<Persona> personas = (List<Persona>) service.readAllProfesores();
         if(personas.isEmpty()){
-            throw new BadRequestException("No se encontraron profesores");
+            mensaje.put("success",Boolean.FALSE);
+            mensaje.put("mensaje","No se encontraron profesores");
+            return ResponseEntity.badRequest().body(mensaje);
         }
-        return personas;
+        mensaje.put("success",Boolean.TRUE);
+        mensaje.put("mensaje",personas);
+        return ResponseEntity.ok(mensaje);
     }
     @PutMapping("/{id}")
-    public Persona editar(@PathVariable Integer id, @RequestBody Persona alumno){
+    public ResponseEntity<?> editar(@PathVariable Integer id, @RequestBody Persona alumno){
+        mensaje = new HashMap<>();
         Persona profesorUpdate = null;
         Optional<Persona> byId = service.findById(id);
         if(! byId.isPresent()){
-            throw new BadRequestException("No se encontro alumno con id "+id);
+            mensaje.put("success",Boolean.FALSE);
+            mensaje.put("mensaje","No se encontro profesor con id "+id);
+            return ResponseEntity.badRequest().body(mensaje);
         }
         profesorUpdate = byId.get();
         profesorUpdate.setNombre(alumno.getNombre());
         profesorUpdate.setApellido(alumno.getApellido());
         profesorUpdate.setDireccion(alumno.getDireccion());
-        return service.save(profesorUpdate);
+        mensaje.put("success",Boolean.TRUE);
+        mensaje.put("mensaje",service.save(profesorUpdate));
+        return ResponseEntity.ok(mensaje);
     }
     @GetMapping("/carrera")
-    public List<Persona> buscarPorCarrera(@RequestParam String q){
+    public ResponseEntity<?> buscarPorCarrera(@RequestParam String q){
+        mensaje = new HashMap<>();
         List<Persona> profesoresByCarrera = (List<Persona>) ((ProfesorDAO) service).findProfesoresByCarrera(q);
         if(profesoresByCarrera.isEmpty()){
-            throw new BadRequestException("No hay profesores asociados a la carrera "+q);
+            mensaje.put("success",Boolean.FALSE);
+            mensaje.put("mensaje","No hay profesores asociados a la carrera "+q);
+            return ResponseEntity.badRequest().body(mensaje);
         }
-        return profesoresByCarrera;
+        mensaje.put("success",Boolean.TRUE);
+        mensaje.put("mensaje",profesoresByCarrera);
+        return ResponseEntity.ok(mensaje);
     }
     @PutMapping("/{idDocente}/carrera/{idCarrera}")
-    public Persona asociarCarrera(@PathVariable Integer idDocente,@PathVariable Integer idCarrera){
+    public ResponseEntity<?> asociarCarrera(@PathVariable Integer idDocente,@PathVariable Integer idCarrera){
+        mensaje = new HashMap<>();
         Persona profesor = null;
         Carrera carrera = null;
         Optional<Persona> existeDocente = service.findById(idDocente);
         Optional<Carrera> existeCarrera = carreraDAO.findById(idCarrera);
         if(!existeDocente.isPresent()){
-            throw new BadRequestException("No existe docente con el id "+idDocente);
+            mensaje.put("success",Boolean.FALSE);
+            mensaje.put("mensaje","No existe docente con el id "+idDocente);
+            return ResponseEntity.badRequest().body(mensaje);
         }
         if(!existeCarrera.isPresent()){
-            throw new BadRequestException("No existe carrera con el id "+idCarrera);
+            mensaje.put("success",Boolean.FALSE);
+            mensaje.put("mensaje","No existe carrera con el id "+idCarrera);
+            return ResponseEntity.badRequest().body(mensaje);
         }
         profesor = existeDocente.get();
         carrera = existeCarrera.get();
         Set<Carrera> lista=((Profesor)profesor).getCarreras();
         lista.add(carrera);
         ((Profesor)profesor).setCarreras(lista);
-        return service.save(profesor);
+        mensaje.put("success",Boolean.TRUE);
+        mensaje.put("mensaje",service.save(profesor));
+        return ResponseEntity.ok(mensaje);
 
     }
 }

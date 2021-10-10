@@ -3,9 +3,12 @@ package com.springsimplespasos.universidad.universidadbackend.controlador;
 import com.springsimplespasos.universidad.universidadbackend.exceptions.BadRequestException;
 import com.springsimplespasos.universidad.universidadbackend.modelo.entidades.Carrera;
 import com.springsimplespasos.universidad.universidadbackend.servicios.contratos.GenericDAO;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public class GenericController <E,S extends GenericDAO<E>>{
@@ -17,35 +20,61 @@ public class GenericController <E,S extends GenericDAO<E>>{
     }
 
     @GetMapping
-    public List<E> obtenerTodos(){
+    public ResponseEntity<?> obtenerTodos(){
+        Map<String,Object> mensaje = new HashMap<>();
         List<E> listado = (List<E>) service.findAll();
         if(listado.isEmpty()){
-            throw new BadRequestException(String.format("No se han encontado %ss",nombreEntidad));
+            mensaje.put("success",Boolean.FALSE);
+            mensaje.put("mensaje",String.format("No se han encontado %ss",nombreEntidad));
+            return ResponseEntity.badRequest().body(mensaje);
         }
-        return listado;
+        mensaje.put("success",Boolean.TRUE);
+        mensaje.put("data",listado);
+        return ResponseEntity.ok(mensaje);
     }
 
     @GetMapping("/{id}")
-    public E leerPorId(@PathVariable Integer id){
+    public ResponseEntity<?> leerPorId(@PathVariable Integer id){
+        Map<String,Object> mensaje = new HashMap<>();
         Optional<E> persona = service.findById(id);
         if(!persona.isPresent()){
-            throw new BadRequestException("No se encontro "+id+" en la entidad "+nombreEntidad);
+            mensaje.put("success",Boolean.FALSE);
+            mensaje.put("mensaje","No se encontro "+id+" en la entidad "+nombreEntidad);
+
+            return ResponseEntity.badRequest().body(mensaje);
         }
-        return persona.get();
+        mensaje.put("success",Boolean.TRUE);
+        mensaje.put("data",persona);
+        return ResponseEntity.ok(mensaje);
     }
 
     @PostMapping
-    public E guardar(@RequestBody E e){
-        return service.save(e);
+    public ResponseEntity<?> guardar(@RequestBody E e){
+        Map<String,Object> mensaje = new HashMap<>();
+        E save = service.save(e);
+        E obj = null;
+        if(save.equals(obj)){
+            mensaje.put("success",Boolean.FALSE);
+            mensaje.put("mensaje","Error en el insert");
+
+            return ResponseEntity.badRequest().body(mensaje);
+        }
+        mensaje.put("success",Boolean.TRUE);
+        mensaje.put("data",save);
+        return ResponseEntity.ok(mensaje);
     }
 
     @DeleteMapping("/{id}")
-    public void eliminar(@PathVariable Integer id){
+    public ResponseEntity<?> eliminar(@PathVariable Integer id){
+        Map<String,Object> mensaje = new HashMap<>();
         Optional<E> byId = service.findById(id);
         if(!byId.isPresent()){
-            throw new BadRequestException("Error al eliminar "+nombreEntidad+", verifique id");
+            mensaje.put("success",Boolean.FALSE);
+            mensaje.put("mensaje","Error al eliminar");
+            return ResponseEntity.badRequest().body(mensaje);
         }
-        service.deleteById(id);
+        mensaje.put("success",Boolean.TRUE);
+        return ResponseEntity.ok(mensaje);
     }
 
 }

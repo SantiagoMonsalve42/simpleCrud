@@ -6,71 +6,102 @@ import com.springsimplespasos.universidad.universidadbackend.modelo.entidades.Pa
 import com.springsimplespasos.universidad.universidadbackend.modelo.entidades.enumeradores.Pizarron;
 import com.springsimplespasos.universidad.universidadbackend.servicios.contratos.AulaDAO;
 import com.springsimplespasos.universidad.universidadbackend.servicios.contratos.PabellonDAO;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
 @RequestMapping("/aula")
 public class AulaController extends GenericController<Aula, AulaDAO> {
+    private Map<String,Object> mensaje;
     private PabellonDAO pabellonDAO;
     public AulaController(AulaDAO service, PabellonDAO pabellonDAO) {
         super(service);
         this.pabellonDAO = pabellonDAO;
     }
     @GetMapping("/pizarron")
-    public List<Aula> findAulasByPizarron(@RequestParam Pizarron query){
+    public ResponseEntity<?> findAulasByPizarron(@RequestParam Pizarron query){
+        mensaje = new HashMap<>();
         List<Aula> aulas = (List<Aula>) service.buscarPorTipoPizarron(query);
         if(aulas.isEmpty()){
-            throw new BadRequestException("No hay aulas con pizarron del tipo "+query);
+            mensaje.put("success",Boolean.FALSE);
+            mensaje.put("mensaje","No hay aulas con pizarron del tipo "+query);
+            return ResponseEntity.badRequest().body(mensaje);
         }
-        return aulas;
+        mensaje.put("success",Boolean.TRUE);
+        mensaje.put("mensaje",aulas);
+        return ResponseEntity.ok(mensaje);
     }
 
     @GetMapping("/pabellon-nombre")
-    public List<Aula> findAulasByPabellonNombre (@RequestParam String query){
+    public ResponseEntity<?> findAulasByPabellonNombre (@RequestParam String query){
+        mensaje = new HashMap<>();
         List<Aula> aulas = (List<Aula>) service.buscarPorNombrePabellon(query);
         if(aulas.isEmpty()){
-            throw new BadRequestException("No hay aulas con pertencientes al pabellon "+query);
+            mensaje.put("success",Boolean.FALSE);
+            mensaje.put("mensaje","No hay aulas con pertencientes al pabellon "+query);
+            return ResponseEntity.badRequest().body(mensaje);
         }
-        return aulas;
+        mensaje.put("success",Boolean.TRUE);
+        mensaje.put("mensaje",aulas);
+        return ResponseEntity.ok(mensaje);
     }
 
     @GetMapping("/numero-aula")
-    public Aula findAulaByNroAula(@RequestParam Integer query){
+    public ResponseEntity<?> findAulaByNroAula(@RequestParam Integer query){
+        mensaje = new HashMap<>();
         Optional<Aula> aulas = service.buscarPorNumeroDeAula(query);
         if(!aulas.isPresent()){
-            throw new BadRequestException("No hay aulas con el numero "+query);
+            mensaje.put("success",Boolean.FALSE);
+            mensaje.put("mensaje","No hay aulas con el numero "+query);
+            return ResponseEntity.badRequest().body(mensaje);
         }
-        return aulas.get();
+        mensaje.put("success",Boolean.TRUE);
+        mensaje.put("mensaje",aulas.get());
+        return ResponseEntity.ok(mensaje);
     }
 
     @PutMapping("/{id}")
-    public Aula editar (@PathVariable Integer id,@RequestBody Aula aula){
+    public ResponseEntity<?> editar (@PathVariable Integer id,@RequestBody Aula aula){
+        mensaje = new HashMap<>();
         Optional<Aula> byId = service.findById(id);
         if(!byId.isPresent()){
-            throw new BadRequestException("No existe aula con el id "+id);
+            mensaje.put("success",Boolean.FALSE);
+            mensaje.put("mensaje","No existe aula con el id "+id);
+            return ResponseEntity.badRequest().body(mensaje);
         }
         Aula aulaGuardar = byId.get();
         aulaGuardar.setCantidadPupitres(aula.getCantidadPupitres());
         aulaGuardar.setPizarron(aula.getPizarron());
         aulaGuardar.setMedidas(aula.getMedidas());
-        return service.save(aulaGuardar);
+        mensaje.put("success",Boolean.TRUE);
+        mensaje.put("mensaje",service.save(aulaGuardar));
+        return ResponseEntity.ok(mensaje);
     }
     @PutMapping("/{idAula}/pabellon/{idPabellon}")
-    public Aula asignarAPabellon(@PathVariable Integer idAula,@PathVariable Integer idPabellon){
+    public ResponseEntity<?> asignarAPabellon(@PathVariable Integer idAula,@PathVariable Integer idPabellon){
+        mensaje = new HashMap<>();
         Optional<Aula> aulaBusqueda = service.findById(idAula);
         Optional<Pabellon> pabellonBusqueda = pabellonDAO.findById(idPabellon);
         if(!aulaBusqueda.isPresent()){
-            throw new BadRequestException("No existe aula con id "+idAula);
+            mensaje.put("success",Boolean.FALSE);
+            mensaje.put("mensaje","No existe aula con id "+idAula);
+            return ResponseEntity.badRequest().body(mensaje);
         }
         if(!pabellonBusqueda.isPresent()){
-            throw new BadRequestException("No existe el pabellon con id "+idPabellon);
+            mensaje.put("success",Boolean.FALSE);
+            mensaje.put("mensaje","No existe el pabellon con id "+idPabellon);
+            return ResponseEntity.badRequest().body(mensaje);
         }
         Aula aula = aulaBusqueda.get();
         Pabellon pabellon = pabellonBusqueda.get();
         aula.setPabellon(pabellon);
-        return service.save(aula);
+        mensaje.put("success",Boolean.TRUE);
+        mensaje.put("mensaje",service.save(aula));
+        return ResponseEntity.ok(mensaje);
     }
 }

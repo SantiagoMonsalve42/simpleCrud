@@ -4,9 +4,15 @@ import com.springsimplespasos.universidad.universidadbackend.exceptions.BadReque
 import com.springsimplespasos.universidad.universidadbackend.modelo.entidades.Carrera;
 import com.springsimplespasos.universidad.universidadbackend.servicios.contratos.CarreraDAO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -18,55 +24,86 @@ public class CarreraController extends GenericController<Carrera,CarreraDAO>{
         super(service);
         nombreEntidad= "Carrera";
     }
-
     @PutMapping("/{id}")
-    public Carrera update(@PathVariable Integer id,@RequestBody Carrera carrera){
+    public ResponseEntity<?> update(@PathVariable Integer id, @RequestBody Carrera carrera){
+        Map<String,Object> mensaje = new HashMap<>();
         Carrera carreraUpdate=null;
         Optional<Carrera> byId = service.findById(id);
         if(!byId.isPresent()){
-            throw new BadRequestException("No existe carrera con id "+id);
+            mensaje.put("success",Boolean.FALSE);
+            mensaje.put("mensaje","No existe la carrera con id "+id);
+
+            return ResponseEntity.badRequest().body(mensaje);
         }
         carreraUpdate = byId.get();
         if(carrera.getCantidadAnios() <0){
-            throw new BadRequestException("La cantidad de años no puede ser negativa");
+            mensaje.put("success",Boolean.FALSE);
+            mensaje.put("mensaje","La cantidad de años no puede ser negativa");
+
+            return ResponseEntity.badRequest().body(mensaje);
         }
         if(carrera.getCantidaMaterias() <0){
-            throw new BadRequestException("La cantidad de materias no puede ser negativa");
+            mensaje.put("success",Boolean.FALSE);
+            mensaje.put("mensaje","La cantidad de materias no puede ser negativa");
+
+            return ResponseEntity.badRequest().body(mensaje);
         }
         carreraUpdate.setCantidadAnios(carrera.getCantidadAnios());
         carreraUpdate.setCantidaMaterias(carrera.getCantidaMaterias());
-        return service.save(carreraUpdate);
+        mensaje.put("success",Boolean.TRUE);
+        mensaje.put("mensaje",service.save(carreraUpdate));
+        return ResponseEntity.ok(mensaje);
     }
     @GetMapping("/nombre-contains")
-    public List<Carrera> findCarrerasByNombreContains(@RequestParam String query){
+    public ResponseEntity<?> findCarrerasByNombreContains(@RequestParam String query){
+        Map<String,Object> mensaje = new HashMap<>();
         List<Carrera> carrerasByNombreContains = (List<Carrera>) service.findCarrerasByNombreContains(query);
         if(carrerasByNombreContains.isEmpty()){
-            throw new BadRequestException("Ninguna carrera contiene "+query);
+            mensaje.put("success",Boolean.FALSE);
+            mensaje.put("mensaje","Ninguna carrera contiene "+query);
+            return ResponseEntity.badRequest().body(mensaje);
         }
-        return carrerasByNombreContains;
+        mensaje.put("success",Boolean.TRUE);
+        mensaje.put("mensaje",carrerasByNombreContains);
+        return ResponseEntity.ok(mensaje);
     }
     @GetMapping("/nombre-contains-ignore")
-    public List<Carrera> findCarrerasByNombreContainsIgnoreCase(@RequestParam String query){
+    public ResponseEntity<?> findCarrerasByNombreContainsIgnoreCase(@RequestParam String query){
+        Map<String,Object> mensaje = new HashMap<>();
         List<Carrera> carrerasByNombreContains = (List<Carrera>) service.findCarrerasByNombreContainsIgnoreCase(query);
         if(carrerasByNombreContains.isEmpty()){
-            throw new BadRequestException("Ninguna carrera contiene "+query);
+            mensaje.put("success",Boolean.FALSE);
+            mensaje.put("mensaje","Ninguna carrera contiene "+query);
+            return ResponseEntity.badRequest().body(mensaje);
         }
-        return carrerasByNombreContains;
+        mensaje.put("success",Boolean.TRUE);
+        mensaje.put("mensaje",carrerasByNombreContains);
+        return ResponseEntity.ok(mensaje);
     }
     @GetMapping("/años")
-    public List<Carrera> findCarrerasByCantidadAniosAfter (@RequestParam Integer query){
+    public ResponseEntity<?> findCarrerasByCantidadAniosAfter (@RequestParam Integer query){
+        Map<String,Object> mensaje = new HashMap<>();
         List<Carrera> carrerasByNombreContains = (List<Carrera>) service.findCarrerasByCantidadAniosAfter(query);
         if(carrerasByNombreContains.isEmpty()){
-            throw new BadRequestException("Ninguna carrera tiene mas años que "+query);
+            mensaje.put("success",Boolean.FALSE);
+            mensaje.put("mensaje","Ninguna carrera tiene mas años que "+query);
+            return ResponseEntity.badRequest().body(mensaje);
         }
-        return carrerasByNombreContains;
+        mensaje.put("success",Boolean.TRUE);
+        mensaje.put("mensaje",carrerasByNombreContains);
+        return ResponseEntity.ok(mensaje);
     }
     @GetMapping("/docente")
-    public List<Carrera> buscarCarrerasPorProfesorNombreYApellido(@RequestParam String name,@RequestParam String lastname){
+    public ResponseEntity<?> buscarCarrerasPorProfesorNombreYApellido(@RequestParam String name,@RequestParam String lastname){
+        Map<String,Object> mensaje = new HashMap<>();
         List<Carrera> carrerasByNombreContains = (List<Carrera>) service.buscarCarrerasPorProfesorNombreYApellido(name,lastname);
         if(carrerasByNombreContains.isEmpty()){
-            throw new BadRequestException("Ninguna carrera pertenece al docente "+name+" "+lastname);
+            mensaje.put("success",Boolean.FALSE);
+            mensaje.put("mensaje","Ninguna carrera pertenece al docente "+name+" "+lastname);
+            return ResponseEntity.badRequest().body(mensaje);
         }
-        return carrerasByNombreContains;
+        mensaje.put("success",Boolean.TRUE);
+        mensaje.put("mensaje",carrerasByNombreContains);
+        return ResponseEntity.ok(mensaje);
     }
 }
