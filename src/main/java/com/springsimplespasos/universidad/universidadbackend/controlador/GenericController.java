@@ -3,6 +3,9 @@ package com.springsimplespasos.universidad.universidadbackend.controlador;
 import com.springsimplespasos.universidad.universidadbackend.exceptions.BadRequestException;
 import com.springsimplespasos.universidad.universidadbackend.modelo.entidades.Carrera;
 import com.springsimplespasos.universidad.universidadbackend.servicios.contratos.GenericDAO;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,6 +23,10 @@ public class GenericController <E,S extends GenericDAO<E>>{
     }
 
     @GetMapping
+    @ApiOperation(value="Buscar todos los datos de la entidad")
+    @ApiResponses({
+            @ApiResponse(code = 200,message = "ejecutado correctamente")
+    })
     public ResponseEntity<?> obtenerTodos(){
         Map<String,Object> mensaje = new HashMap<>();
         List<E> listado = (List<E>) service.findAll();
@@ -34,6 +41,10 @@ public class GenericController <E,S extends GenericDAO<E>>{
     }
 
     @GetMapping("/{id}")
+    @ApiOperation(value="Buscar todos los datos de la entidad por id")
+    @ApiResponses({
+            @ApiResponse(code = 200,message = "ejecutado correctamente")
+    })
     public ResponseEntity<?> leerPorId(@PathVariable Integer id){
         Map<String,Object> mensaje = new HashMap<>();
         Optional<E> persona = service.findById(id);
@@ -49,6 +60,10 @@ public class GenericController <E,S extends GenericDAO<E>>{
     }
 
     @PostMapping
+    @ApiOperation(value="Guardar registro en la entidad")
+    @ApiResponses({
+            @ApiResponse(code = 200,message = "ejecutado correctamente")
+    })
     public ResponseEntity<?> guardar(@RequestBody E e){
         Map<String,Object> mensaje = new HashMap<>();
         E save = service.save(e);
@@ -63,7 +78,10 @@ public class GenericController <E,S extends GenericDAO<E>>{
         mensaje.put("data",save);
         return ResponseEntity.ok(mensaje);
     }
-
+    @ApiOperation(value="Eliminar datos de la entidad por id")
+    @ApiResponses({
+            @ApiResponse(code = 200,message = "ejecutado correctamente")
+    })
     @DeleteMapping("/{id}")
     public ResponseEntity<?> eliminar(@PathVariable Integer id){
         Map<String,Object> mensaje = new HashMap<>();

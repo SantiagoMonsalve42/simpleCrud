@@ -7,6 +7,10 @@ import com.springsimplespasos.universidad.universidadbackend.modelo.entidades.Pr
 import com.springsimplespasos.universidad.universidadbackend.servicios.contratos.CarreraDAO;
 import com.springsimplespasos.universidad.universidadbackend.servicios.contratos.PersonaDAO;
 import com.springsimplespasos.universidad.universidadbackend.servicios.contratos.ProfesorDAO;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +19,7 @@ import java.util.*;
 
 @RestController()
 @RequestMapping("/profesor")
+@Api(value = "Acciones relacionadas con los profesores", tags = "Profesores")
 public class ProfesorController extends PersonaController{
     private Map<String,Object> mensaje;
     private CarreraDAO carreraDAO;
@@ -39,6 +44,10 @@ public class ProfesorController extends PersonaController{
         return ResponseEntity.ok(mensaje);
     }
     @PutMapping("/{id}")
+    @ApiOperation(value="Editar profesores por id")
+    @ApiResponses({
+            @ApiResponse(code = 200,message = "ejecutado correctamente")
+    })
     public ResponseEntity<?> editar(@PathVariable Integer id, @RequestBody Persona alumno){
         mensaje = new HashMap<>();
         Persona profesorUpdate = null;
@@ -57,6 +66,10 @@ public class ProfesorController extends PersonaController{
         return ResponseEntity.ok(mensaje);
     }
     @GetMapping("/carrera")
+    @ApiOperation(value="Buscar profesores por carrera")
+    @ApiResponses({
+            @ApiResponse(code = 200,message = "ejecutado correctamente")
+    })
     public ResponseEntity<?> buscarPorCarrera(@RequestParam String q){
         mensaje = new HashMap<>();
         List<Persona> profesoresByCarrera = (List<Persona>) ((ProfesorDAO) service).findProfesoresByCarrera(q);
@@ -70,6 +83,10 @@ public class ProfesorController extends PersonaController{
         return ResponseEntity.ok(mensaje);
     }
     @PutMapping("/{idDocente}/carrera/{idCarrera}")
+    @ApiOperation(value="Asignar carrera a profesor por sus ids")
+    @ApiResponses({
+            @ApiResponse(code = 200,message = "ejecutado correctamente")
+    })
     public ResponseEntity<?> asociarCarrera(@PathVariable Integer idDocente,@PathVariable Integer idCarrera){
         mensaje = new HashMap<>();
         Persona profesor = null;

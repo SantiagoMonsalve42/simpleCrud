@@ -6,6 +6,10 @@ import com.springsimplespasos.universidad.universidadbackend.modelo.entidades.Pa
 import com.springsimplespasos.universidad.universidadbackend.modelo.entidades.enumeradores.Pizarron;
 import com.springsimplespasos.universidad.universidadbackend.servicios.contratos.AulaDAO;
 import com.springsimplespasos.universidad.universidadbackend.servicios.contratos.PabellonDAO;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,6 +20,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/aula")
+@Api(value = "Acciones relacionadas con las aulas", tags = "Aulas")
 public class AulaController extends GenericController<Aula, AulaDAO> {
     private Map<String,Object> mensaje;
     private PabellonDAO pabellonDAO;
@@ -24,6 +29,10 @@ public class AulaController extends GenericController<Aula, AulaDAO> {
         this.pabellonDAO = pabellonDAO;
     }
     @GetMapping("/pizarron")
+    @ApiOperation(value="Buscar aulas por tipo de pizarron")
+    @ApiResponses({
+            @ApiResponse(code = 200,message = "ejecutado correctamente")
+    })
     public ResponseEntity<?> findAulasByPizarron(@RequestParam Pizarron query){
         mensaje = new HashMap<>();
         List<Aula> aulas = (List<Aula>) service.buscarPorTipoPizarron(query);
@@ -38,6 +47,10 @@ public class AulaController extends GenericController<Aula, AulaDAO> {
     }
 
     @GetMapping("/pabellon-nombre")
+    @ApiOperation(value="Buscar aulas por nombre de pabellon")
+    @ApiResponses({
+            @ApiResponse(code = 200,message = "ejecutado correctamente")
+    })
     public ResponseEntity<?> findAulasByPabellonNombre (@RequestParam String query){
         mensaje = new HashMap<>();
         List<Aula> aulas = (List<Aula>) service.buscarPorNombrePabellon(query);
@@ -52,6 +65,10 @@ public class AulaController extends GenericController<Aula, AulaDAO> {
     }
 
     @GetMapping("/numero-aula")
+    @ApiOperation(value="Buscar aulas por numero de aula")
+    @ApiResponses({
+            @ApiResponse(code = 200,message = "ejecutado correctamente")
+    })
     public ResponseEntity<?> findAulaByNroAula(@RequestParam Integer query){
         mensaje = new HashMap<>();
         Optional<Aula> aulas = service.buscarPorNumeroDeAula(query);
@@ -66,6 +83,10 @@ public class AulaController extends GenericController<Aula, AulaDAO> {
     }
 
     @PutMapping("/{id}")
+    @ApiOperation(value="Editar por id")
+    @ApiResponses({
+            @ApiResponse(code = 200,message = "ejecutado correctamente")
+    })
     public ResponseEntity<?> editar (@PathVariable Integer id,@RequestBody Aula aula){
         mensaje = new HashMap<>();
         Optional<Aula> byId = service.findById(id);
@@ -83,6 +104,10 @@ public class AulaController extends GenericController<Aula, AulaDAO> {
         return ResponseEntity.ok(mensaje);
     }
     @PutMapping("/{idAula}/pabellon/{idPabellon}")
+    @ApiOperation(value="Asignar aula a pabellon con sus ids")
+    @ApiResponses({
+            @ApiResponse(code = 200,message = "ejecutado correctamente")
+    })
     public ResponseEntity<?> asignarAPabellon(@PathVariable Integer idAula,@PathVariable Integer idPabellon){
         mensaje = new HashMap<>();
         Optional<Aula> aulaBusqueda = service.findById(idAula);

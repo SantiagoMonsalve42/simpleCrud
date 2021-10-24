@@ -7,6 +7,10 @@ import com.springsimplespasos.universidad.universidadbackend.modelo.entidades.Pe
 import com.springsimplespasos.universidad.universidadbackend.servicios.contratos.AlumnoDAO;
 import com.springsimplespasos.universidad.universidadbackend.servicios.contratos.CarreraDAO;
 import com.springsimplespasos.universidad.universidadbackend.servicios.contratos.PersonaDAO;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +23,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/alumnos")
+@Api(value = "Acciones relacionadas con los alumnos", tags = "Alumnos")
 public class AlumnoController extends PersonaController {
     private Map<String,Object> mensaje;
     private final CarreraDAO carreraDAO;
@@ -44,6 +49,10 @@ public class AlumnoController extends PersonaController {
         return ResponseEntity.ok(mensaje);
     }
     @PutMapping("/{id}")
+    @ApiOperation(value="Editar por id")
+    @ApiResponses({
+            @ApiResponse(code = 200,message = "ejecutado correctamente")
+    })
     public ResponseEntity<?> update(@PathVariable Integer id,@RequestBody Persona alumno){
         mensaje = new HashMap<>();
         Persona alumnoUpdate = null;
@@ -61,7 +70,10 @@ public class AlumnoController extends PersonaController {
         mensaje.put("mensaje",service.save(alumnoUpdate));
         return ResponseEntity.ok(mensaje);
     }
-
+    @ApiOperation(value="Asignar carrera a un alumno con sus ids")
+    @ApiResponses({
+            @ApiResponse(code = 200,message = "ejecutado correctamente")
+    })
     @PutMapping("/{idAlumno}/carrera/{idCarrera}")
     public ResponseEntity<?> asignarCarreraAlumno(@PathVariable Integer idAlumno,@PathVariable Integer idCarrera){
         mensaje = new HashMap<>();

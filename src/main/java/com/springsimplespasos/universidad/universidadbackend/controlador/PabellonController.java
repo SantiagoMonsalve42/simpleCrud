@@ -3,6 +3,10 @@ package com.springsimplespasos.universidad.universidadbackend.controlador;
 import com.springsimplespasos.universidad.universidadbackend.exceptions.BadRequestException;
 import com.springsimplespasos.universidad.universidadbackend.modelo.entidades.Pabellon;
 import com.springsimplespasos.universidad.universidadbackend.servicios.contratos.PabellonDAO;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,12 +17,17 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/pabellon")
+@Api(value = "Acciones relacionadas con los pabellones", tags = "Pabellones")
 public class PabellonController extends GenericController<Pabellon, PabellonDAO> {
     private Map<String,Object> mensaje;
     public PabellonController(PabellonDAO service) {
         super(service);
     }
     @GetMapping("/localidad")
+    @ApiOperation(value="Buscar pabellones por localidad")
+    @ApiResponses({
+            @ApiResponse(code = 200,message = "ejecutado correctamente")
+    })
     public ResponseEntity<?> buscarPabellonesPorLocalidad(@RequestParam String query){
         mensaje = new HashMap<>();
         List<Pabellon> pabellons =(List<Pabellon>)service.buscarPorLocalidad(query);
@@ -32,6 +41,10 @@ public class PabellonController extends GenericController<Pabellon, PabellonDAO>
         return ResponseEntity.ok(mensaje);
     }
     @GetMapping("/nombre")
+    @ApiOperation(value="Buscar pabellones por nombre")
+    @ApiResponses({
+            @ApiResponse(code = 200,message = "ejecutado correctamente")
+    })
     public ResponseEntity<?> buscarPabellonesPorNombre(@RequestParam String query){
         mensaje = new HashMap<>();
         List<Pabellon> pabellons =(List<Pabellon>)service.buscarPorNombre(query);
@@ -46,6 +59,10 @@ public class PabellonController extends GenericController<Pabellon, PabellonDAO>
     }
 
     @PutMapping("/{id}")
+    @ApiOperation(value="Editar pabellones por id")
+    @ApiResponses({
+            @ApiResponse(code = 200,message = "ejecutado correctamente")
+    })
     public ResponseEntity<?> editar(@PathVariable Integer id,@RequestBody Pabellon pabellon){
         mensaje = new HashMap<>();
         Optional<Pabellon> pabellonBusqueda= service.findById(id);

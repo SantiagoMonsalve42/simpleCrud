@@ -8,6 +8,10 @@ import com.springsimplespasos.universidad.universidadbackend.modelo.entidades.en
 import com.springsimplespasos.universidad.universidadbackend.servicios.contratos.EmpleadoDAO;
 import com.springsimplespasos.universidad.universidadbackend.servicios.contratos.PabellonDAO;
 import com.springsimplespasos.universidad.universidadbackend.servicios.contratos.PersonaDAO;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +23,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/empleado")
+@Api(value = "Acciones relacionadas con los empleados", tags = "Empleados")
 public class EmpleadoController extends PersonaController{
     private PabellonDAO pabellonDAO;
     private Map<String,Object> mensaje;
@@ -42,6 +47,10 @@ public class EmpleadoController extends PersonaController{
         return ResponseEntity.ok(mensaje);
     }
     @GetMapping("/tipo")
+    @ApiOperation(value="Buscar empleados segun su tipo")
+    @ApiResponses({
+            @ApiResponse(code = 200,message = "ejecutado correctamente")
+    })
     public ResponseEntity<?> findEmpleadosByTipoEmpleado(@RequestParam TipoEmpleado tipo){
         mensaje =new HashMap<>();
         List<Persona> personas = (List<Persona>) ((EmpleadoDAO)service).findEmpleadoByTipoEmpleado(tipo);
@@ -55,6 +64,10 @@ public class EmpleadoController extends PersonaController{
         return ResponseEntity.ok(mensaje);
     }
     @PutMapping("/{id}")
+    @ApiOperation(value="Editar empleados por id")
+    @ApiResponses({
+            @ApiResponse(code = 200,message = "ejecutado correctamente")
+    })
     public ResponseEntity<?> editar(@PathVariable Integer id,@RequestBody Empleado empleado){
         mensaje =new HashMap<>();
         Persona empleadoUpdate = null;
@@ -73,6 +86,10 @@ public class EmpleadoController extends PersonaController{
         return ResponseEntity.ok(mensaje);
     }
     @PutMapping("/{idEmpleado}/pabellon/{idPabellon}")
+    @ApiOperation(value="Editar pabellon de empleado segun sus ids")
+    @ApiResponses({
+            @ApiResponse(code = 200,message = "ejecutado correctamente")
+    })
     public ResponseEntity<?> editarPabellon(@PathVariable Integer idEmpleado,@PathVariable Integer idPabellon){
         mensaje =new HashMap<>();
         Persona empleadoUpdate = null;
