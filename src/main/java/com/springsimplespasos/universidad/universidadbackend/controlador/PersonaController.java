@@ -22,14 +22,14 @@ public class PersonaController extends GenericController<Persona, PersonaDAO> {
     @GetMapping("/nombre-apellido")
     public ResponseEntity<?> buscarPorNombreYApellido(@RequestParam String name, @RequestParam String lastname){
         mensaje = new HashMap<>();
-        Optional<Persona> persona = service.buscarPorNombreYApellido(name, lastname);
-        if(!persona.isPresent()){
+        List<Persona> persona = (List<Persona>) service.buscarPorNombreYApellido(name, lastname);
+        if(persona.isEmpty()){
             mensaje.put("success",Boolean.FALSE);
             mensaje.put("mensaje","No se encontro la persona "+name+" "+lastname);
             return ResponseEntity.badRequest().body(mensaje);
         }
         mensaje.put("success",Boolean.TRUE);
-        mensaje.put("mensaje",persona.get());
+        mensaje.put("mensaje",persona);
         return ResponseEntity.ok(mensaje);
     }
 

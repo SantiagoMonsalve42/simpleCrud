@@ -34,10 +34,10 @@ class PersonaRepositoryTest {
         //GIVEN
         Persona save = empleadoRepository.save(empleado01());
         //WHEN
-        Optional<Persona> expected = empleadoRepository.buscarPorNombreYApellido(empleado01().getNombre(), empleado01().getApellido());
+        List<Persona> expected = (List<Persona>) empleadoRepository.buscarPorNombreYApellido(empleado01().getNombre(), empleado01().getApellido());
         //THEN
-        assertThat(expected.get()).isInstanceOf(Empleado.class);
-        assertThat(expected.get()).isEqualTo(save);
+        assertThat(expected.get(0)).isInstanceOf(Empleado.class);
+        assertThat(expected.get(0)).isEqualTo(save);
     }
 
     @Test

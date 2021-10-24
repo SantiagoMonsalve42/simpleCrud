@@ -14,7 +14,7 @@ public class PersonaDAOImp extends GenericDAOImp<Persona, PersonaRepository> imp
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<Persona> buscarPorNombreYApellido(String name, String lastName) {
+    public Iterable<Persona> buscarPorNombreYApellido(String name, String lastName) {
         return repository.buscarPorNombreYApellido(name,lastName);
     }
 

@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.Optional;
 
 public interface PersonaDAO extends GenericDAO<Persona>{
-    Optional<Persona> buscarPorNombreYApellido(String name,String lastName);
+    Iterable<Persona> buscarPorNombreYApellido(String name,String lastName);
     Optional<Persona> buscarPorDNI(String dni);
     Iterable<Persona> buscarPersonaPorApellido(String apellido);
     Iterable<Persona> readAllAlumnos();

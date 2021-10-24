@@ -10,7 +10,7 @@ import java.util.Optional;
 @NoRepositoryBean
 public interface PersonaRepository extends CrudRepository<Persona,Integer> {
     @Query("select p from Persona p where p.nombre = ?1 and p.apellido = ?2")
-    Optional<Persona> buscarPorNombreYApellido(String name,String lastName);
+    Iterable<Persona> buscarPorNombreYApellido(String name,String lastName);
     @Query("select p from Persona p where p.dni = ?1")
     Optional<Persona> buscarPorDNI(String dni);
     @Query("select p from Persona p where p.apellido like %?1%")
